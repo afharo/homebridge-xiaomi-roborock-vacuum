@@ -195,12 +195,16 @@ class XiaomiRoborockVacuum {
       .on('get', (cb) => callbackify(() => this.getBatteryLow(), cb));
 
     if (this.config.pause) {
-      this.services.pause = new Service.Switch(`${this.config.name} Pause`);
+      this.services.pause = new Service.Switch(`${this.config.name} Pause`, 'Pause');
       this.services.pause
         .getCharacteristic(Characteristic.On)
         .on('get', (cb) => callbackify(() => this.getPauseState(), cb))
         .on('set', (newState, cb) => callbackify(() => this.setPauseState(newState), cb));
-      // TODO: Add 'change' status?
+
+      this.services.fan
+        .getCharacteristic(Characteristic.RotationDirection)
+        .on('get', (cb) => callbackify(() => this.getPauseState(), cb))
+        .on('set', (newState, cb) => callbackify(() => this.setPauseState(newState), cb));
     }
 
     if (this.config.dock) {
